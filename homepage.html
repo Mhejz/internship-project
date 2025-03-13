@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>intern project</title>
+  <link rel="stylesheet" href="./assets/style.css">
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<body>
+    <section class="container">
+        <div>
+            <div class="header">
+                <a href="#default" class="logo">Welcome to my TO DO List</a>
+                <div class="header-right">
+                    <a href="index.html">
+                        <button class="btn">Back</button>
+                    </a>
+                </div>
+              </div>
+        </div>
+        
+        <form action="">
+
+            <div class="task-container">
+                <input type="text" id="txtTask" name="txtTask" placeholder="ADD YOUR TASK HERE" class="inputTask">
+                <button class="btn">Add</button>
+            </div><br><br>
+            
+
+            <div class="pagination">
+                <a href="#" class="prev disabled">❮</a>
+                <div class="page-numbers">
+                    <a href="#" class="active">1</a>
+                    <a href="#">2</a>
+                    <a href="#">3</a>
+                    <a href="#">4</a>
+                    <a href="#">5</a>
+                </div>
+                <a href="#" class="next">❯</a>
+            </div>
+            
+            <!-- Dynamic Content Area -->
+            <div class="content">
+                <p id="page-content">1 / 5 <br> Caption Text</p>
+            </div>
+        </form>
+        
+        <div class="theme-btn-container"></div>
+        <img src="./assets/img/illustration.png" alt="illustration" class="imgsize"/>
+    </section>
+</body>
+
+<!-- CUSTOM JS -->
+<script>
+    const pages = document.querySelectorAll(".page-numbers a");
+    const prevBtn = document.querySelector(".prev");
+    const nextBtn = document.querySelector(".next");
+    const content = document.getElementById("page-content");
+
+    const captions = [
+    `1 / 8 <br> 
+    <strong>Assignments:<br><br>
+
+    1.Create a GitHub repo named internship-project.<br>
+
+    2.Push a sample README.md with a short self-introduction.<br>
+
+    3.Create a branch, modify README, and submit a Pull Request.<br>
+
+    3.Merge the PR and delete the branch.`,
+
+    `2 / 8 <br> 
+    <strong>Assignments:<br><br>
+
+    1.Design a To-Do List UI using HTML & CSS.<br>
+
+    2.Make it responsive using Flexbox/Grid.<br>
+
+    3.Push it to their GitHub repo and submit a PR.`,
+
+    `3 / 8 <br> 
+    <strong>Assignments:<br><br>
+
+    1.Add functionality to the To-Do List: Add, Delete, Mark as Done.<br>
+
+    2.Store tasks using Local Storage.<br>
+
+    3.Set up a basic Express.js server that returns a static HTML file.`,
+
+    `4 / 8 <br> 
+    <strong>Assignments:<br><br>
+
+    1.Install MySQL and create a tasks table (id, title, status).<br>
+
+    2.Write SQL queries for INSERT, SELECT, UPDATE, DELETE.<br>
+
+    3.Discuss CMS platforms like WordPress & their database structure.`,
+
+    `5 / 8 <br> 
+    <strong>Assignments:<br><br>
+
+    1.Connect Express.js to MySQL.<br>
+
+    2.Create REST endpoints for the To-Do List (Create, Read, Update, Delete).<br>
+
+    3.Test API using Postman.`,
+];
+
+    let currentPage = 1;
+
+    function updatePagination() {
+        pages.forEach(page => page.classList.remove("active"));
+        pages[currentPage - 1].classList.add("active");
+
+        prevBtn.classList.toggle("disabled", currentPage === 1);
+        nextBtn.classList.toggle("disabled", currentPage === pages.length);
+
+        content.innerHTML = captions[currentPage - 1];
+    }
+
+    pages.forEach((page, index) => {
+        page.addEventListener("click", function (e) {
+            e.preventDefault();
+            currentPage = index + 1;
+            updatePagination();
+        });
+    });
+
+    prevBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        if (currentPage > 1) {
+            currentPage--;
+            updatePagination();
+        }
+    });
+
+    nextBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        if (currentPage < pages.length) {
+            currentPage++;
+            updatePagination();
+        }
+    });
+
+    updatePagination();
+</script>
+
+<!-- partial -->
+  <script  src="./assets/script.js"></script>
+
+</body>
+</html>
