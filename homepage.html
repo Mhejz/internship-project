@@ -22,130 +22,89 @@
               </div>
         </div>
         
-        <form action="">
-
-            <div class="task-container">
-                <input type="text" id="txtTask" name="txtTask" placeholder="ADD YOUR TASK HERE" class="inputTask">
-                <button class="btn">Add</button>
-            </div><br><br>
-            
-
-            <div class="pagination">
-                <a href="#" class="prev disabled">❮</a>
-                <div class="page-numbers">
-                    <a href="#" class="active">1</a>
-                    <a href="#">2</a>
-                    <a href="#">3</a>
-                    <a href="#">4</a>
-                    <a href="#">5</a>
-                </div>
-                <a href="#" class="next">❯</a>
-            </div>
-            
-            <!-- Dynamic Content Area -->
-            <div class="content">
-                <p id="page-content">1 / 5 <br> Caption Text</p>
-            </div>
-        </form>
         
+        <div class="container">
+            
+            <div class="input-container">
+                <input type="text" id="taskInput" placeholder="Enter a task">
+                <button class="add-btn btn" onclick="addTask()">Add</button>
+            </div>
+    
+            <ul id="taskList"></ul>
+        </div>
+
+
+        
+          
         <div class="theme-btn-container"></div>
-        <img src="./assets/img/illustration.png" alt="illustration" class="imgsize"/>
+        
+
+        
     </section>
 </body>
 
 <!-- CUSTOM JS -->
 <script>
-    const pages = document.querySelectorAll(".page-numbers a");
-    const prevBtn = document.querySelector(".prev");
-    const nextBtn = document.querySelector(".next");
-    const content = document.getElementById("page-content");
+    function loadTasks() {
+            let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+            let taskList = document.getElementById("taskList");
+            taskList.innerHTML = "";
 
-    const captions = [
-    `1 / 8 <br> 
-    <strong>Assignments:<br><br>
+            tasks.forEach((task, index) => {
+                let li = document.createElement("li");
 
-    1.Create a GitHub repo named internship-project.<br>
+                let checkbox = document.createElement("input");
+                checkbox.type = "checkbox";
+                checkbox.checked = task.done;
+                checkbox.onchange = function() {
+                    markDone(index);
+                };
 
-    2.Push a sample README.md with a short self-introduction.<br>
+                let taskText = document.createElement("span");
+                taskText.textContent = task.text;
+                if (task.done) taskText.classList.add("done");
 
-    3.Create a branch, modify README, and submit a Pull Request.<br>
+                let removeBtn = document.createElement("button");
+                removeBtn.textContent = "❌";
+                removeBtn.onclick = function() {
+                    removeTask(index);
+                };
 
-    3.Merge the PR and delete the branch.`,
-
-    `2 / 8 <br> 
-    <strong>Assignments:<br><br>
-
-    1.Design a To-Do List UI using HTML & CSS.<br>
-
-    2.Make it responsive using Flexbox/Grid.<br>
-
-    3.Push it to their GitHub repo and submit a PR.`,
-
-    `3 / 8 <br> 
-    <strong>Assignments:<br><br>
-
-    1.Add functionality to the To-Do List: Add, Delete, Mark as Done.<br>
-
-    2.Store tasks using Local Storage.<br>
-
-    3.Set up a basic Express.js server that returns a static HTML file.`,
-
-    `4 / 8 <br> 
-    <strong>Assignments:<br><br>
-
-    1.Install MySQL and create a tasks table (id, title, status).<br>
-
-    2.Write SQL queries for INSERT, SELECT, UPDATE, DELETE.<br>
-
-    3.Discuss CMS platforms like WordPress & their database structure.`,
-
-    `5 / 8 <br> 
-    <strong>Assignments:<br><br>
-
-    1.Connect Express.js to MySQL.<br>
-
-    2.Create REST endpoints for the To-Do List (Create, Read, Update, Delete).<br>
-
-    3.Test API using Postman.`,
-];
-
-    let currentPage = 1;
-
-    function updatePagination() {
-        pages.forEach(page => page.classList.remove("active"));
-        pages[currentPage - 1].classList.add("active");
-
-        prevBtn.classList.toggle("disabled", currentPage === 1);
-        nextBtn.classList.toggle("disabled", currentPage === pages.length);
-
-        content.innerHTML = captions[currentPage - 1];
-    }
-
-    pages.forEach((page, index) => {
-        page.addEventListener("click", function (e) {
-            e.preventDefault();
-            currentPage = index + 1;
-            updatePagination();
-        });
-    });
-
-    prevBtn.addEventListener("click", function (e) {
-        e.preventDefault();
-        if (currentPage > 1) {
-            currentPage--;
-            updatePagination();
+                li.appendChild(checkbox);
+                li.appendChild(taskText);
+                li.appendChild(removeBtn);
+                taskList.appendChild(li);
+            });
         }
-    });
 
-    nextBtn.addEventListener("click", function (e) {
-        e.preventDefault();
-        if (currentPage < pages.length) {
-            currentPage++;
-            updatePagination();
+        function addTask() {
+            let taskInput = document.getElementById("taskInput");
+            let taskText = taskInput.value.trim();
+
+            if (taskText) {
+                let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+                tasks.push({ text: taskText, done: false });
+                localStorage.setItem("tasks", JSON.stringify(tasks));
+                taskInput.value = "";
+                loadTasks();
+            }
         }
-    });
 
-    updatePagination();
+        function removeTask(index) {
+            let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+            tasks.splice(index, 1);
+            localStorage.setItem("tasks", JSON.stringify(tasks));
+            loadTasks();
+        }
+
+        function markDone(index) {
+            let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+            tasks[index].done = !tasks[index].done;
+            localStorage.setItem("tasks", JSON.stringify(tasks));
+            loadTasks();
+        }
+
+        window.onload = loadTasks;
 </script>
 
 <!-- partial -->
